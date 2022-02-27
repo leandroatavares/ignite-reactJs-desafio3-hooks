@@ -34,10 +34,7 @@ const Home = (): JSX.Element => {
       const response = await api.get('/products');
       const productsList: Product[] =response.data
       const productsFormatted = productsList.map(product => {
-        const priceFormatted = new Intl.NumberFormat('pt-BR', {
-          style: 'currency',
-          currency: 'BRL'
-        }).format(product.price)
+        const priceFormatted = formatPrice(product.price)
         return {...product, priceFormatted}
       })
       setProducts(productsFormatted)
