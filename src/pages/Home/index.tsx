@@ -32,7 +32,15 @@ const Home = (): JSX.Element => {
   useEffect(() => {
     async function loadProducts() {
       const response = await api.get('/products');
-      setProducts(response.data)
+      const productsList: Product[] =response.data
+      const productsFormatted = productsList.map(product => {
+        const priceFormatted = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        }).format(product.price)
+        return {...product, priceFormatted}
+      })
+      setProducts(productsFormatted)
     }
     loadProducts();
   }, []);
