@@ -38,7 +38,8 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
         toast.info('produto já no carrinho');
         return;
       }
-      const newProductList = [...cart, response.data]
+      const productToAdd = {...response.data, amount: 1}
+      const newProductList = [...cart, productToAdd]
       await localStorage.setItem('@RocketShoes:cart', JSON.stringify(cart))
       setCart(newProductList)
     } catch {
