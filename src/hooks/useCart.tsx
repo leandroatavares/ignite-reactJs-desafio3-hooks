@@ -31,23 +31,27 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
   });
 
   const addProduct = async (productId: number) => {
-    //TODO -> bug no adicionar, adicionar toast
     try {
       const response = await api.get(`products/${productId}`)
-      const appendedProduct = response.data;
-      const newProductList = [...cart, appendedProduct]
+      
+      if(cart.some(product => product.id === response.data.id)) {
+        toast.info('produto já no carrinho');
+        return;
+      }
+      const newProductList = [...cart, response.data]
       await localStorage.setItem('@RocketShoes:cart', JSON.stringify(cart))
       setCart(newProductList)
     } catch {
-      // TODO
+      toast.error('Erro ao adicionar ao carrinho')
     }
   };
 
   const removeProduct = (productId: number) => {
     try {
-      // TODO
+      const newCartList = cart.filter(product => product.id !== productId)
+      setCart(newCartList)
     } catch {
-      // TODO
+      toast.error('Erro ao remover produto do carrinho')
     }
   };
 
@@ -56,9 +60,13 @@ export function CartProvider({ children }: CartProviderProps): JSX.Element {
     amount,
   }: UpdateProductAmount) => {
     try {
-      // TODO
+      const productUpdate = cart.map(product => {
+        if(product.id === productId) product.amount = amount;
+        return product;
+      })
+      setCart(productUpdate)
     } catch {
-      // TODO
+      toast.error('Erro ao alterar produto do carrinho')
     }
   };
 
